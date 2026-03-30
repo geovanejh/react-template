@@ -20,7 +20,7 @@ npm run test:coverage # Run tests with coverage report
 
 ## Architecture
 
-React 19 + TypeScript 5.9 + Vite 8 template with Tailwind CSS 4, React Router 7, and Zustand 5.
+React 19 + TypeScript 5.9 + Vite 8 template with Tailwind CSS 4, shadcn/ui, React Router 7, and Zustand 5.
 
 ### Entry Flow
 
@@ -29,13 +29,14 @@ React 19 + TypeScript 5.9 + Vite 8 template with Tailwind CSS 4, React Router 7,
 ### Source Structure
 
 - **`src/components/layout/`** — RootLayout, Header, Footer (wraps all routes via `<Outlet />`)
-- **`src/components/ui/`** — Reusable UI primitives (Button with variant/size props)
+- **`src/components/ui/`** — shadcn/ui components (add new ones via `npx shadcn@latest add <component>`)
 - **`src/components/ErrorBoundary.tsx`** — Class-based error boundary
 - **`src/pages/`** — Route-level components (HomePage, AboutPage, NotFoundPage)
 - **`src/router.tsx`** — createBrowserRouter config with nested routes
 - **`src/stores/`** — Zustand stores (counterStore example)
 - **`src/lib/httpClient.ts`** — Typed fetch wrapper with HttpError class
 - **`src/services/`** — API service modules using httpClient
+- **`src/lib/utils.ts`** — `cn()` helper (clsx + tailwind-merge) used by shadcn/ui components
 - **`src/hooks/`** — Custom hooks (useLocalStorage)
 - **`src/config/env.ts`** — Type-safe environment variable access
 - **`src/types/`** — Shared TypeScript interfaces
@@ -51,7 +52,8 @@ React 19 + TypeScript 5.9 + Vite 8 template with Tailwind CSS 4, React Router 7,
 ### Config
 
 - **TypeScript**: Strict mode, noUnusedLocals, noUnusedParameters. Composite project (tsconfig.app.json for src/, tsconfig.node.json for vite.config.ts)
-- **Tailwind**: v4 Vite plugin in vite.config.ts, imported via `src/index.css`
+- **Tailwind**: v4 Vite plugin in vite.config.ts, imported via `src/index.css` with shadcn/ui CSS variables and theme
+- **shadcn/ui**: Config in `components.json` (style: base-nova, baseColor: neutral, icons: lucide). Components are copied into `src/components/ui/` and can be customized directly
 - **ESLint**: Flat config with typescript-eslint, react-hooks, react-refresh, eslint-config-prettier
 - **Prettier**: singleQuote, no semi, trailingComma all
 - **Husky**: Pre-commit hook runs lint-staged (ESLint + Prettier on staged files)
