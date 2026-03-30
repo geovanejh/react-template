@@ -4,26 +4,55 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-```bash
-npm run dev        # Start development server with HMR
-npm run build      # Type-check + production build (outputs to dist/)
-npm run lint       # Run ESLint on all TS/TSX files
-npm run preview    # Preview production build locally
-```
+All commands run from `react-template/`:
 
-There are no tests configured in this template.
+```bash
+npm run dev          # Start Vite dev server with HMR
+npm run build        # Type-check (tsc -b) + production build
+npm run lint         # Run ESLint on all TS/TSX files
+npm run preview      # Preview production build locally
+npm run format       # Format all files with Prettier
+npm run format:check # Check formatting without writing
+npm run test         # Run Vitest in watch mode
+npm run test:run     # Run all tests once
+npm run test:coverage # Run tests with coverage report
+```
 
 ## Architecture
 
-Minimal React 19 + TypeScript + Vite starter template. Single-component structure with no routing or state management library.
+React 19 + TypeScript 5.9 + Vite 8 template with Tailwind CSS 4, React Router 7, and Zustand 5.
 
-- **Entry**: `index.html` → `src/main.tsx` (mounts `<App>` into `#root`)
-- **TypeScript**: Composite project — `tsconfig.app.json` for `src/`, `tsconfig.node.json` for `vite.config.ts`. Both use strict mode with `noUnusedLocals` and `noUnusedParameters`.
-- **Styling**: CSS custom properties in `src/index.css` for global theming (light/dark via `prefers-color-scheme`); component-scoped styles in `src/App.css`.
-- **ESLint**: Flat config (`eslint.config.js`) with typescript-eslint, react-hooks, and react-refresh plugins.
+### Entry Flow
 
-## Expanding This Template
+`index.html` → `src/main.tsx` → `ErrorBoundary` → `RouterProvider` → `RootLayout` (Header + Outlet + Footer) → Pages
 
-- **React Compiler**: Not enabled by default. To enable, install `babel-plugin-react-compiler` and add it to `vite.config.ts`.
-- **Type-aware lint rules**: Replace `tseslint.configs.recommended` with `tseslint.configs.recommendedTypeChecked` in `eslint.config.js` and add `parserOptions.project`.
-- **SWC**: Swap `@vitejs/plugin-react` for `@vitejs/plugin-react-swc` in `vite.config.ts` for faster builds.
+### Source Structure
+
+- **`src/components/layout/`** — RootLayout, Header, Footer (wraps all routes via `<Outlet />`)
+- **`src/components/ui/`** — Reusable UI primitives (Button with variant/size props)
+- **`src/components/ErrorBoundary.tsx`** — Class-based error boundary
+- **`src/pages/`** — Route-level components (HomePage, AboutPage, NotFoundPage)
+- **`src/router.tsx`** — createBrowserRouter config with nested routes
+- **`src/stores/`** — Zustand stores (counterStore example)
+- **`src/lib/httpClient.ts`** — Typed fetch wrapper with HttpError class
+- **`src/services/`** — API service modules using httpClient
+- **`src/hooks/`** — Custom hooks (useLocalStorage)
+- **`src/config/env.ts`** — Type-safe environment variable access
+- **`src/types/`** — Shared TypeScript interfaces
+
+### Key Patterns
+
+- **Named exports** everywhere (no default exports)
+- **`@/` path alias** maps to `src/` (configured in both tsconfig.app.json and vite.config.ts)
+- **No barrel exports** — use direct imports like `@/components/ui/Button`
+- **Collocated tests** in `__tests__/` directories next to source
+- **Test utilities** in `src/test/utils.tsx` — `renderWithProviders` wraps components with MemoryRouter
+
+### Config
+
+- **TypeScript**: Strict mode, noUnusedLocals, noUnusedParameters. Composite project (tsconfig.app.json for src/, tsconfig.node.json for vite.config.ts)
+- **Tailwind**: v4 Vite plugin in vite.config.ts, imported via `src/index.css`
+- **ESLint**: Flat config with typescript-eslint, react-hooks, react-refresh, eslint-config-prettier
+- **Prettier**: singleQuote, no semi, trailingComma all
+- **Husky**: Pre-commit hook runs lint-staged (ESLint + Prettier on staged files)
+- **Env vars**: Prefixed with `VITE_`, typed in `src/vite-env.d.ts`, accessed via `src/config/env.ts`
