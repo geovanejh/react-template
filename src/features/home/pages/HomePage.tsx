@@ -1,5 +1,5 @@
-import { useCounterStore } from '@/stores/counterStore'
-import { Button } from '@/components/ui/Button'
+import { useCounterStore } from '@/features/counter/stores/counterStore'
+import { Button } from '@/shared/components/ui/Button'
 
 export function HomePage() {
   const { count, increment, decrement, reset } = useCounterStore()

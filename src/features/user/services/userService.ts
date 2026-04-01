@@ -1,5 +1,5 @@
-import { httpClient } from '@/lib/httpClient'
-import type { User } from '@/types/api'
+import { httpClient } from '@/shared/lib/httpClient'
+import type { User } from '@/features/user/types/api'
 
 export const userService = {
   getAll: () => httpClient.get<User[]>('/users'),

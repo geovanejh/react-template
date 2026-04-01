@@ -1,4 +1,4 @@
-import { env } from '@/config/env'
+import { env } from '@/shared/config/env'
 
 export class HttpError extends Error {
   status: number

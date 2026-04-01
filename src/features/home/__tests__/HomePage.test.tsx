@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { renderWithProviders } from '@/test/utils'
-import { HomePage } from '@/pages/HomePage'
-import { useCounterStore } from '@/stores/counterStore'
+import { renderWithProviders } from '@/shared/test/utils'
+import { HomePage } from '@/features/home/pages/HomePage'
+import { useCounterStore } from '@/features/counter/stores/counterStore'
 
 describe('HomePage', () => {
   beforeEach(() => {
