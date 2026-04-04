@@ -1,18 +1,34 @@
 import { createBrowserRouter } from 'react-router'
 import { RootLayout } from '@/features/layout/components/RootLayout'
-import { HomePage } from '@/features/home/pages/HomePage'
-import { AboutPage } from '@/features/about/pages/AboutPage'
-import { NotFoundPage } from '@/shared/components/NotFoundPage'
 import { RouteErrorPage } from '@/shared/components/RouteErrorPage'
+import { lazyRoute } from '@/shared/lib/lazyLoad'
 
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     errorElement: <RouteErrorPage />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'about', element: <AboutPage /> },
-      { path: '*', element: <NotFoundPage /> },
+      {
+        index: true,
+        lazy: lazyRoute(
+          () => import('@/features/home/pages/HomePage'),
+          'HomePage',
+        ),
+      },
+      {
+        path: 'about',
+        lazy: lazyRoute(
+          () => import('@/features/about/pages/AboutPage'),
+          'AboutPage',
+        ),
+      },
+      {
+        path: '*',
+        lazy: lazyRoute(
+          () => import('@/shared/components/NotFoundPage'),
+          'NotFoundPage',
+        ),
+      },
     ],
   },
 ])
