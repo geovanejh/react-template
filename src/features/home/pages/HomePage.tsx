@@ -1,8 +1,14 @@
+import { useState } from 'react'
 import { useCounterStore } from '@/features/counter/stores/counterStore'
 import { Button } from '@/shared/components/ui/Button'
 
 export function HomePage() {
+  const [shouldCrash, setShouldCrash] = useState(false)
   const { count, increment, decrement, reset } = useCounterStore()
+
+  if (shouldCrash) {
+    throw new Error('Manual test error from HomePage')
+  }
 
   return (
     <div className="space-y-8">
@@ -29,6 +35,9 @@ export function HomePage() {
           <Button onClick={increment}>+1</Button>
           <Button variant="ghost" onClick={reset}>
             Reset
+          </Button>
+          <Button variant="destructive" onClick={() => setShouldCrash(true)}>
+            Crash component
           </Button>
         </div>
       </section>
