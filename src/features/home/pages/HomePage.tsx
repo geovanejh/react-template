@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import { useCounterStore } from '@/features/counter/stores/counterStore'
+import { useApiCall } from '@/shared/hooks/useApiCall'
+import { userService } from '@/features/user/services/userService'
 import { Button } from '@/shared/components/ui/Button'
 
 export function HomePage() {
   const [shouldCrash, setShouldCrash] = useState(false)
   const { count, increment, decrement, reset } = useCounterStore()
+  const { execute: fetchUsers, isLoading } = useApiCall(userService.getAll)
 
   if (shouldCrash) {
     throw new Error('Manual test error from HomePage')
@@ -38,6 +41,13 @@ export function HomePage() {
           </Button>
           <Button variant="destructive" onClick={() => setShouldCrash(true)}>
             Crash component
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => fetchUsers()}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Fetching...' : 'Fetch users'}
           </Button>
         </div>
       </section>
